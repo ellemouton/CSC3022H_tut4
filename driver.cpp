@@ -17,13 +17,15 @@ int main(int argc, char * argv[]){
 			output_name = argv[4];
 			MTNELL004::Image l1;
 			MTNELL004::Image l2;
-			//MTNELL004::Image l3(l1);
+			MTNELL004::Image l3;
 
 			l1.load(argv[2]);
 			l2.load(argv[3]);
-			l1.save("output.pgm");
-			l2.save("output2.pgm");
-			//l3 = l1+l2;
+			
+			l3 = l1+l2;
+
+			l2.save("output.pgm");
+			
 
 		}
 		else if (op=="-s"){

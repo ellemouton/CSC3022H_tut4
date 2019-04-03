@@ -14,6 +14,7 @@ namespace MTNELL004{
 		return i;
 	}
 
+	//-------------------------------------------------Image functions-------------------------------------
 	//constructor
 	Image::Image(){
 
@@ -26,6 +27,32 @@ namespace MTNELL004{
 
 	//copy constructor
 	Image::Image(const Image & rhs): width(rhs.width), height(rhs.height){
+		int length = width*height;
+		data.reset(new unsigned char[length]);
+
+		int index = 0;
+		for(Image::iterator i = rhs.begin(); i!=rhs.end(); ++i){
+			data[++index] = *i;
+		}
+
+	}
+
+	//move constructor
+	Image::Image(Image && rhs): width(move(rhs.width)), height(move(rhs.height)){
+		int length = width*height;
+		data.reset(new unsigned char[length]);
+
+		int index = 0;
+		for(Image::iterator i = rhs.begin(); i!=rhs.end(); ++i){
+			data[++index] = move(*i);
+		}
+	}
+
+	//copy assignment operator
+	Image & Image::operator=(const Image & rhs){
+		width = rhs.width;
+		height = rhs.height;
+
 		Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
 
@@ -33,23 +60,25 @@ namespace MTNELL004{
 			*beg = *inStart; 
 			++beg; ++inStart;
 		}
+		return *this;
 	}
-/*
-	//move constructor
-	Image::Image(Image && rhs){
-
-	}
-
-	//copy assignment operator
-	Image & Image::operator=(const Image & rhs){
-
-	}
-
+	
 	//move assignment operator
 	Image & Image::operator=(Image && rhs){
+		width = move(width);
+		height = move(height);
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
+
+		while(beg!=end){
+			*beg = move(*inStart); 
+			++beg; ++inStart;
+		}
+		return *this;
 
 	}
-	*/
+	
 	void Image::printVals(){
 		cout<<(float)data[10000]<<endl;
 	}
@@ -130,16 +159,10 @@ namespace MTNELL004{
 		int length = width*height;
 		char* img = new char[length];
 		int index = 0;
-		start();
-		finish();
-		//test
+		
 		for(Image::iterator i = begin(); i!=end(); ++i){
-			img[index] = *i;
-			cout <<"ello"<<endl;
-			index++;
+			img[++index] = *i;
 		}
-
-	
 
 		//create output file
 	    ofstream myfile;
@@ -150,4 +173,40 @@ namespace MTNELL004{
 
 	  	delete [] img;
 	}
+	//-------------------------------------------------Image::iterator functions-------------------------------------
+
+	Image::iterator::iterator(u_char *p): ptr(p){}
+
+	Image::iterator::iterator(const Image::iterator & rhs): ptr(rhs.ptr){}
+
+	Image::iterator & Image::iterator::operator=(const Image::iterator & rhs){
+		ptr = rhs.ptr;
+		return *this;
+	}
+
+	unsigned char & Image::iterator::operator*() {
+		return *ptr;
+	}
+
+	Image::iterator & Image::iterator::operator++(){
+		++ptr;
+		return *this;
+	}
+
+	Image::iterator & Image::iterator::operator--(){
+		--ptr;
+		return *this;
+	}
+
+	bool Image::iterator::operator !=(const Image::iterator & rhs){
+		return ptr != rhs.ptr;
+	}
+
+	Image::iterator Image::begin(void) const{
+		return Image::iterator(data.get());
+	}
+	Image::iterator Image::end(void) const{
+		return Image::iterator(data.get()+(width*height));
+	}
+
 }

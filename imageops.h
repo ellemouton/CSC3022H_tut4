@@ -26,11 +26,9 @@ namespace MTNELL004{
 			//destructor
 			~Image();
 
-			
 			//copy constructor
 			Image(const Image & rhs);
 
-			/*
 			//move constructor
 			Image(Image && rhs);
 
@@ -39,7 +37,7 @@ namespace MTNELL004{
 
 			//move assignment operator
 			Image & operator=(Image && rhs);
-			*/
+			
 
 			void load(std::string input);
 			void save(std::string output);
@@ -54,52 +52,28 @@ namespace MTNELL004{
 				private:
 					unsigned char *ptr;
 					//construct only via Image class (begin/end)
-					iterator(u_char *p): ptr(p){}
+					iterator(u_char *p);
 
 				public:
 					//copy constructor is public 
-					iterator(const iterator & rhs): ptr(rhs.ptr){}
+					iterator(const iterator & rhs);
 
 					//define overload ops: *, ++, --, =
-					iterator & operator=(const iterator & rhs){
-						ptr = rhs.ptr;
-						return *this;
-					}
+					iterator & operator=(const iterator & rhs);
 
-					unsigned char & operator*() {
-						return *ptr;
-					}
+					unsigned char & operator*();
 
-					iterator & operator++(){
-						++ptr;
-						return *this;
-					}
+					iterator & operator++();
 
-					iterator & operator--(){
-						--ptr;
-						return *this;
-					}
+					iterator & operator--();
 
-					bool operator !=(const iterator & rhs){
-						return ptr == rhs.ptr;
-					}
-
+					bool operator !=(const iterator & rhs);
 					//other methods for iterator
 			};
 
 			//define begin()/end() to get iterator to start and "one-past" end
-			iterator begin(void) const{
-				return iterator(data.get());
-			}
-			iterator end(void) const{
-				return iterator(&data[width*height]);
-			}
-			void start(void) const{
-				std::cout<<(float)*data.get()<<std::endl;
-			}
-			void finish(void) const{
-				std::cout<<(float)(data[width*height])<<std::endl;
-			}
+			iterator begin(void) const;
+			iterator end(void) const;
 
 
 
