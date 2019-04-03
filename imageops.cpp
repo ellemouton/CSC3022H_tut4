@@ -28,11 +28,14 @@ namespace MTNELL004{
 	//copy constructor
 	Image::Image(const Image & rhs): width(rhs.width), height(rhs.height){
 		int length = width*height;
-		data.reset(new unsigned char[length]);
+		data = unique_ptr<unsigned char[]>(new unsigned char[length]);
 
-		int index = 0;
-		for(Image::iterator i = rhs.begin(); i!=rhs.end(); ++i){
-			data[++index] = *i;
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
+
+		while(beg!=end){
+			*beg = *inStart; 
+			++beg; ++inStart;
 		}
 
 	}
@@ -65,16 +68,10 @@ namespace MTNELL004{
 	
 	//move assignment operator
 	Image & Image::operator=(Image && rhs){
-		width = move(width);
-		height = move(height);
+		width = move(rhs.width);
+		height = move(rhs.height);
+		data = move(rhs.data);
 
-		Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
-
-		while(beg!=end){
-			*beg = move(*inStart); 
-			++beg; ++inStart;
-		}
 		return *this;
 
 	}
@@ -85,16 +82,101 @@ namespace MTNELL004{
 
 
 	Image & Image::operator+=(const Image & rhs){
+		
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
 
+		while(beg!=end){
+			if((float)*beg+(float)*inStart > 255){
+				*beg = 255;
+			}
+			else{
+				*beg += *inStart;
+			}
+			++beg; ++inStart;
+		}
+		
+		return *this;
 	}
 
-	Image Image::operator+(const Image & rhs){
+	Image Image::operator+(const Image & rhs) const{
 		Image result = *this;
 		result += rhs;
+		
 		return result;
 	}
 
+	Image & Image::operator-=(const Image & rhs){
+		
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = rhs.begin(), inEnd = rhs.end();
 
+		while(beg!=end){
+			if((float)*beg-(float)*inStart < 0){
+				*beg = 0;
+			}
+			else{
+				*beg -= *inStart;
+			}
+			++beg; ++inStart;
+		}
+		
+		return *this;
+	}
+
+	Image Image::operator-(const Image & rhs) const{
+		Image result = *this;
+		result -= rhs;
+		
+		return result;
+	}
+
+	Image Image::operator!(void) const{
+		Image result = *this;
+
+		Image::iterator beg = result.begin(), end = result.end();
+		while(beg!=end){
+			*beg = 255-*beg;
+			++beg; 
+		}
+		
+		return result;
+	}
+
+	Image Image::operator/(const Image & rhs) const{
+		Image result = *this;
+
+		Image::iterator res_beg = result.begin(), res_end = result.end();
+		Image::iterator mask_start = rhs.begin(), mask_end = rhs.end();
+
+		while(res_beg!=res_end){
+			if(*mask_start!=255){
+				*res_beg = 0;
+			}
+			++res_beg; ++mask_start;
+		}
+
+		return result;
+	}
+
+	Image Image::operator*(int thresh) const{
+		Image result = *this;
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator res_beg = result.begin(), res_end = result.end();
+
+		while(beg!=end){
+			if(*beg>thresh){
+				*res_beg = 255;
+			}
+			else{
+				*res_beg = 0;
+			}
+			++beg; ++res_beg;
+		}
+
+		return result;
+	}
 
 	void Image::load(string input){
 		//first read header info

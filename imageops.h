@@ -45,7 +45,12 @@ namespace MTNELL004{
 
 			//overload operations
 			Image & operator+=(const Image & rhs);
-			Image operator+(const Image & rhs);
+			Image & operator-=(const Image & rhs);
+			Image operator+(const Image & rhs) const;
+			Image operator-(const Image & rhs) const;
+			Image operator!(void) const;
+			Image operator/(const Image & rhs) const;
+			Image operator*(int thresh) const;
 
 			class iterator{
 				friend class Image;
