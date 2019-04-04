@@ -51,6 +51,7 @@ namespace MTNELL004{
 			Image operator!(void) const;
 			Image operator/(const Image & rhs) const;
 			Image operator*(int thresh) const;
+			Image operator%(std::string g) const;
 
 			class iterator{
 				friend class Image;
@@ -73,7 +74,12 @@ namespace MTNELL004{
 					iterator & operator--();
 
 					bool operator !=(const iterator & rhs);
+
 					//other methods for iterator
+
+					iterator & operator+(int offset);
+					iterator & operator-(int offset);
+
 			};
 
 			//define begin()/end() to get iterator to start and "one-past" end

@@ -77,6 +77,19 @@ int main(int argc, char * argv[]){
 
 			l2.save("output.pgm");
 		}
+		else if(op=="-f"){
+			string g = argv[3];
+			output_name = argv[4];
+
+			MTNELL004::Image l1;
+			MTNELL004::Image l2;
+			l1.load(argv[2]);
+
+			l2 = l1 % g;
+
+			l2.save("output.pgm");
+
+		}
 		else{
 			cout << "invalid option chosed"<<endl;
 		}

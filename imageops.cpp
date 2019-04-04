@@ -178,6 +178,47 @@ namespace MTNELL004{
 		return result;
 	}
 
+	Image Image::operator%(std::string g) const{
+		Image result = *this;
+
+		//open filter file
+		ifstream f;
+		f.open(g);
+		if(!f){
+			cerr << "File not found\n";
+			f.close();
+		}
+
+		int N;
+		f>>N>>ws;
+		float arr[N*N];
+
+		for(int i = 0; i<N*N; i++){
+			f>>arr[i]>>ws;
+		}
+
+		int span = (N*N-1)/2;
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator res_beg = result.begin(), res_end = result.end();
+
+		while(beg!=end){
+			float weighted_sum = 0;
+			Image::iterator in_beg = beg-span, in_end = beg+span;
+
+			for(int i=0; i<N*N; i++){
+				weighted_sum+=((float)(*in_beg)*arr[i]);
+				++in_beg;
+			}
+
+			*res_beg= weighted_sum;
+			++beg; ++res_beg;
+		}
+
+		f.close();
+		return result;
+	}
+
 	void Image::load(string input){
 		//first read header info
 		//open the file
@@ -237,22 +278,22 @@ namespace MTNELL004{
 		f.close();
 	}
 	void Image::save(string output){
-
+		
 		int length = width*height;
 		char* img = new char[length];
 		int index = 0;
 		
 		for(Image::iterator i = begin(); i!=end(); ++i){
-			img[++index] = *i;
+			img[index++] = *i;
 		}
-
+		
 		//create output file
 	    ofstream myfile;
 	  	myfile.open (output);
 	    myfile << "P5\n"<<height<<" "<<width<<"\n255\n";
 	  	myfile.write (img,length);
 	  	myfile.close();
-
+	  
 	  	delete [] img;
 	}
 	//-------------------------------------------------Image::iterator functions-------------------------------------
@@ -280,6 +321,15 @@ namespace MTNELL004{
 		return *this;
 	}
 
+	Image::iterator & Image::iterator::operator+(int offset){
+		ptr+=offset;
+		return *this;
+	}
+	Image::iterator & Image::iterator::operator-(int offset){
+		ptr-=offset;
+		return *this;
+	}
+
 	bool Image::iterator::operator !=(const Image::iterator & rhs){
 		return ptr != rhs.ptr;
 	}
@@ -291,4 +341,11 @@ namespace MTNELL004{
 		return Image::iterator(data.get()+(width*height));
 	}
 
+	
 }
+
+
+
+
+
+
