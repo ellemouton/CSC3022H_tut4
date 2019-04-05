@@ -188,35 +188,71 @@ namespace MTNELL004{
 			cerr << "File not found\n";
 			f.close();
 		}
-
+		
+		//build array for filter
 		int N;
 		f>>N>>ws;
-		float arr[N*N];
-
-		for(int i = 0; i<N*N; i++){
-			f>>arr[i]>>ws;
+		float arr[N][N];
+		for(int i = 0; i<N; i++){
+			for(int j = 0; j<N; j++){
+				f>>arr[i][j]>>ws;
+			}
 		}
 
-		int span = (N*N-1)/2;
-
+		//build 2D array from image
+		unsigned char img[height][width];
+		//unsigned char img_result[height][width];
 		Image::iterator beg = this->begin(), end = this->end();
+		
+
+		for(int i = 0; i<height; i++){
+			for(int j = 0; j<width; j++){
+				img[i][j] = *beg;
+				++beg;
+			}
+		}
+
 		Image::iterator res_beg = result.begin(), res_end = result.end();
 
-		while(beg!=end){
-			float weighted_sum = 0;
-			Image::iterator in_beg = beg-span, in_end = beg+span;
+		int span = (N-1)/2;
+		int & m = span;
+		int sum, row, col;
+		for(int i = 0; i<height; i++){
+			for(int j = 0; j<width; j++){
+				sum = 0;
+				for(int x = -span; x<span; x++){
+					for(int y = -span; y<span; y++){
+						
+						if(col>=width){
+							col = 2*width-col-1;
+						}
+						else if(col<0){
+							col = -col;
+						}
+						else{
+							col = j+y;
+						}
+						if(row>=height){
+							row = 2*height-row-1;
+						}
+						else if(row<0){
+							row = -row;
+						}
+						else{
+							row = i+x;
+						}
+						sum+= (img[row][col])*(arr[m+x][m+y]);
+					}
+				}
+				*res_beg=sum;
+				++res_beg;
 
-			for(int i=0; i<N*N; i++){
-				weighted_sum+=((float)(*in_beg)*arr[i]);
-				++in_beg;
 			}
-
-			*res_beg= weighted_sum;
-			++beg; ++res_beg;
 		}
-
+		
 		f.close();
 		return result;
+		
 	}
 
 	void Image::load(string input){

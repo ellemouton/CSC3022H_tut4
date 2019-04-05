@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cmath>
 
 namespace MTNELL004{
 	int convertToInt(std::string str);

@@ -85,8 +85,9 @@ int main(int argc, char * argv[]){
 			MTNELL004::Image l2;
 			l1.load(argv[2]);
 
+			
 			l2 = l1 % g;
-
+			
 			l2.save("output.pgm");
 
 		}
