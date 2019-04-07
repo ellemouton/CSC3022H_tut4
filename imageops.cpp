@@ -332,6 +332,19 @@ namespace MTNELL004{
 	  
 	  	delete [] img;
 	}
+
+	int Image::getWidth(void){
+		return width;
+	}
+
+	int Image::getHeight(void){
+		return height;
+	}
+
+	unsigned char * Image::getData(void){
+		return data.get();
+	}
+
 	//-------------------------------------------------Image::iterator functions-------------------------------------
 
 	Image::iterator::iterator(u_char *p): ptr(p){}
@@ -376,6 +389,7 @@ namespace MTNELL004{
 	Image::iterator Image::end(void) const{
 		return Image::iterator(data.get()+(width*height));
 	}
+
 
 	
 }

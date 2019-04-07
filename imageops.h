@@ -43,6 +43,9 @@ namespace MTNELL004{
 			void load(std::string input);
 			void save(std::string output);
 			void printVals(void);
+			int getWidth(void);
+			int getHeight(void);
+			unsigned char * getData(void);
 
 			//overload operations
 			Image & operator+=(const Image & rhs);
