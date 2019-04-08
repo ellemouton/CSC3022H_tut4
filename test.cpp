@@ -296,8 +296,27 @@ TEST_CASE("Image operations","[image_ops]"){
 		//---------------Test filter----------------
 		// operation -> check boundary conditons
 
+		string g = "all_dir_edge_detect.fir";
+
+		//this is the filter that will be read with 'g'
+		int filt[3][3]{
+	        {-1, -1, -1},
+	        {-1, 8, -1},
+	        {-1, -1, -1}
+	    };
+
+	    //using the 'filt' array, we can calculate what the output values should be and compare them to the output given
+
+
+		MTNELL004::Image F1;
+
+		F1 = U1 % g;
+
 		
-		
+
+
+
+
 
 }
 
