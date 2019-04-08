@@ -60,7 +60,7 @@ namespace MTNELL004{
 
 		int index = 0;
 		for(Image::iterator i = rhs.begin(); i!=rhs.end(); ++i){
-			data[++index] = move(*i);
+			data[index++] = std::move(*i);
 		}
 	}
 
