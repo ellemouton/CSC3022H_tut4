@@ -20,6 +20,19 @@ namespace MTNELL004{
 
 	}
 
+	Image::Image(int w, int h, unsigned char * d): width(w), height (h){
+		int length = width*height;
+		data = unique_ptr<unsigned char[]>(new unsigned char[length]);
+
+		Image::iterator beg = this->begin(), end = this->end();
+		int counter = 0;
+
+		while(beg!=end){
+			*beg = d[counter]; 
+			++beg; ++counter;
+		}
+	}
+
 	//destructor
 	Image::~Image(){
 

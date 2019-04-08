@@ -88,10 +88,40 @@ TEST_CASE("Iterator","[iterator]"){
 		std::cout << "Iterator tests" << std::endl;
 		
 		SECTION( "Iterator operations" ) {
+			unsigned char buffer1 [] = {1,2,3,4,5,6,7,8,9};
+			unsigned char buffer2 [] = {10,11,12,13,14,15,16,17,18};
+
+			MTNELL004::Image i1(3,3, buffer1);
+			MTNELL004::Image::iterator beg = i1.begin(), end = i1.end();
+
+			//testing the 'begin' function and  '*' operator
+			REQUIRE(*beg == 1);
+
+			//testing the 'end' function and the '*' operator
+			--end;
+			REQUIRE(*end == 9);
+
+			//testing the '++', '--' and '*' operator
+			++beg;
+			++beg;
+			REQUIRE(*beg == 3);
+
+			--beg;
+			REQUIRE(*beg ==2);
+
+			//testing the '!=' operator
+			REQUIRE(beg!=end);
+
+			//testing the '=' operator
+			beg = end;
+			REQUIRE(*beg == *end);
+
+
 
 		}
 
 		SECTION( "Boundary Conditions" ) {
+			
 
 		}
 
@@ -100,9 +130,29 @@ TEST_CASE("Iterator","[iterator]"){
 TEST_CASE("Image operations","[image_ops]"){
 		std::cout << "Image operation tests" << std::endl;
 		
-		//thresholding, inverting and masking operator overloads
+		unsigned char buffer1 [] = {11,40,200,255,0,130,120,230,24};
+		unsigned char buffer2 [] = {55,90,100,3,3,5,60,112,4};
+		MTNELL004::Image U1(3,3, buffer1);
+		MTNELL004::Image U2(3,3, buffer2);
+		MTNELL004::Image M1;
+		MTNELL004::Image M2;
+		MTNELL004::Image M3;
+		MTNELL004::Image M4;
+		MTNELL004::Image FinalImage;
+
+		//thresholding
+		int threshold = 10;
+		M1 = U1*threshold;
+
+		//inverting
+		M2 = !M1;
+
+		//masking
+		M3 = U1/M1;
+		M4 = U2/M2;
 
 		//Addition and subtraction of images -> ensure that pixels are clamped properly
+		FinalImage = M3+M4;
 
 		//test filter operation -> check boundary conditons
 

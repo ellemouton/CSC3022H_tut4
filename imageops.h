@@ -9,6 +9,7 @@
 #include <sstream>
 #include <fstream>
 #include <cmath>
+#include <string>
 
 namespace MTNELL004{
 	int convertToInt(std::string str);
@@ -23,6 +24,9 @@ namespace MTNELL004{
 
 			//constructor
 			Image();
+
+			//constructor used for testing purposes that takes width, height and buffer of values
+			Image(int width, int height, unsigned char * data);
 
 			//destructor
 			~Image();
