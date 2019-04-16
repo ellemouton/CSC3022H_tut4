@@ -10,6 +10,7 @@
 #include <fstream>
 #include <cmath>
 #include <string>
+#include <memory>
 
 namespace MTNELL004{
 	int convertToInt(std::string str);
