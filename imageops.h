@@ -43,7 +43,6 @@ namespace MTNELL004{
 			//move assignment operator
 			Image & operator=(Image && rhs);
 			
-
 			void load(std::string input);
 			void save(std::string output);
 			void printVals(void);
@@ -94,9 +93,13 @@ namespace MTNELL004{
 			iterator begin(void) const;
 			iterator end(void) const;
 
-
-
+			friend std::ostream & operator<<(std::ostream & os, const Image & rhs);
+			friend Image & operator>>(std::istringstream & is, Image & rhs);
 	};
+
+	std::ostream & operator<<(std::ostream & os, const Image & rhs);
+	Image & operator>>(std::istringstream & is, Image & rhs);
+
 }
 
 

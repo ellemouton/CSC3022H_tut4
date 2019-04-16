@@ -211,7 +211,7 @@ namespace MTNELL004{
 				f>>arr[i][j]>>ws;
 			}
 		}
-
+		
 		//build 2D array from image
 		unsigned char img[height][width];
 		//unsigned char img_result[height][width];
@@ -224,42 +224,51 @@ namespace MTNELL004{
 				++beg;
 			}
 		}
-
+		
 		Image::iterator res_beg = result.begin(), res_end = result.end();
-
+		
 		int span = (N-1)/2;
 		int & m = span;
-		int sum, row, col;
+		int sum;
+		int row = 0;
+		int col = 0;
+
 		for(int i = 0; i<height; i++){
 			for(int j = 0; j<width; j++){
 				sum = 0;
-				for(int x = -span; x<span; x++){
-					for(int y = -span; y<span; y++){
+				for(int x = -span; x<=span; x++){
+					for(int y = -span; y<=span; y++){
 						
+						col = j+y;
+						row = i+x;
+
 						if(col>=width){
 							col = 2*width-col-1;
 						}
 						else if(col<0){
-							col = -col;
+							col = -(col+1);
 						}
-						else{
-							col = j+y;
-						}
+						
 						if(row>=height){
 							row = 2*height-row-1;
 						}
 						else if(row<0){
-							row = -row;
+							row = -(row+1);
 						}
-						else{
-							row = i+x;
-						}
+
 						sum+= (img[row][col])*(arr[m+x][m+y]);
-					}
+					}	
 				}
+				if(sum<0){
+					sum = 0;
+				}
+				else if(sum>255){
+					sum = 255;
+				}
+
 				*res_beg=sum;
 				++res_beg;
-
+				
 			}
 		}
 		
@@ -358,6 +367,34 @@ namespace MTNELL004{
 		return data.get();
 	}
 
+	//----------------------------------------------stand alone functions that use Image class------------------
+
+	std::ostream & operator<<(std::ostream & os, const Image & rhs){
+		Image::iterator beg = rhs.begin(), end = --rhs.end();
+		
+		while(beg!=end){
+			os << +(*beg)<<" ";
+			++beg;
+		}
+		os<<+(*beg);
+
+		return os;
+	}
+
+	Image & operator>>(std::istringstream & is, Image & rhs){
+		Image::iterator beg = rhs.begin(), end = rhs.end();
+		int temp;
+
+		while(is){
+			is>>temp>>ws;
+			*beg = temp;
+			++beg;
+		}
+
+
+		return rhs;
+	}
+
 	//-------------------------------------------------Image::iterator functions-------------------------------------
 
 	Image::iterator::iterator(u_char *p): ptr(p){}
@@ -402,6 +439,8 @@ namespace MTNELL004{
 	Image::iterator Image::end(void) const{
 		return Image::iterator(data.get()+(width*height));
 	}
+
+
 
 
 	

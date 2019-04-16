@@ -291,35 +291,67 @@ TEST_CASE("Image operations","[image_ops]"){
 			}
 			++it_FinalImage_beg; ++it_M4_beg; ++it_M3_beg;
 		}
-		
-
-		//---------------Test filter----------------
-		// operation -> check boundary conditons
-
-		string g = "all_dir_edge_detect.fir";
-
-		//this is the filter that will be read with 'g'
-		int filt[3][3]{
-	        {-1, -1, -1},
-	        {-1, 8, -1},
-	        {-1, -1, -1}
-	    };
-
-	    //using the 'filt' array, we can calculate what the output values should be and compare them to the output given
-
-
-		MTNELL004::Image F1;
-
-		F1 = U1 % g;
-
-		
-
-
-
-
 
 }
 
+TEST_CASE("filter test","[filt]"){
+	//---------------Test filter----------------
+		// operation -> check boundary conditons
+	std::cout << "I/O operation tests" << std::endl;
+	unsigned char buffer1 [] = {1,0,1,0,1,0,1,0,1};
+	MTNELL004::Image U1(3,3, buffer1);
+
+	string g = "all_dir_edge_detect.fir";
+
+	//this is the filter that will be read with 'g'
+	int filt[3][3]{
+        {-1, -1, -1},
+        {-1, 8, -1},
+        {-1, -1, -1}
+    };
+
+    //using the 'filt' array, we can calculate what the output values should be and compare them to the output given
+
+	MTNELL004::Image F1;
+
+	F1 = U1 % g;
+
+	ostringstream serialized;
+	serialized << F1;
+	REQUIRE(serialized.str() == "4 0 4 0 4 0 4 0 4");
+
+}
+
+//------------------tests for the >> and << operators-------------------------------------
+TEST_CASE("I/O operators","[io_ops]"){
+		std::cout << "I/O operation tests" << std::endl;
+		
+		SECTION( "<< operation" ) {
+			unsigned char buffer1 [] = {1,2,3,4,5,6};
+			unsigned char buffer2 [] = {10,11,12,13,14,15};
+
+			MTNELL004::Image i1(3,2, buffer1);
+			MTNELL004::Image i2(3,2, buffer2);
+
+			ostringstream serialized;
+			serialized << i1 << " " << i2;
+			REQUIRE(serialized.str() == "1 2 3 4 5 6 10 11 12 13 14 15");
+
+		}
+
+		SECTION( ">> operation" ) {
+			unsigned char buffer1 [] = {1,2,3,4,5,6};
+			MTNELL004::Image i1(3,2, buffer1);
+			istringstream data("10 11 12 13 14 15");
+
+			data >> i1;
+
+			MTNELL004::Image::iterator beg = i1.begin(), end = i1.end();
+			REQUIRE(*beg==10);
+			REQUIRE(*(--end)==15);
+		}
+
+}
 
 
 
